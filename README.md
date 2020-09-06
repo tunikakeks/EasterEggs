@@ -1,7 +1,7 @@
 # EasterEggs
 An easy way to add nice looking eggs to your server!
 
-[![picture](img/ingame.png)]()
+[![picture](https://github.com/DerDevHD/EasterEggs/blob/master/img/ingame.png)](https://github.com/DerDevHD/EasterEggs)
 
 [![Discord](https://img.shields.io/discord/692324167281934386?color=informational&label=discord)](https://discord.gg/2pADFQW)
 

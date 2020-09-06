@@ -89,7 +89,7 @@ final class EasterCommand extends Command implements PluginIdentifiableCommand{
 						break;
 					}
 					$tmp = $sum === 1 ? "egg was" : "eggs were";
-					$sender->sendMessage(EasterEggs::PREFIX . "$sum " . $tmp . " removed.");
+					$sender->sendMessage(EasterEggs::PREFIX . "$sum $tmp removed.");
 					break;
 				}
 				if(in_array($sender, EasterEggs::$allowedEggAttackers)){
