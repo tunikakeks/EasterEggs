@@ -5,6 +5,10 @@ api:
   - 3.0.0
 main: eastereggs\EasterEggs
 
+mcpe-protocols:
+  - 407
+  - 408
+
 permissions:
   eastereggs.command:
     default: op
