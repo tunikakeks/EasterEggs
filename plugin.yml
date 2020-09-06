@@ -1,0 +1,10 @@
+name: "EasterEggs"
+version: 1.0.0
+author: "DerDevHD"
+api:
+  - 3.0.0
+main: eastereggs\EasterEggs
+
+permissions:
+  eastereggs.command:
+    default: op
