@@ -103,7 +103,7 @@ final class EasterCommand extends Command implements PluginIdentifiableCommand{
 	}
 
 	/**
-	 * @return EasterEggs|null
+	 * @return Plugin
 	 */
 	public function getPlugin() : Plugin{
 		return EasterEggs::getInstance();
