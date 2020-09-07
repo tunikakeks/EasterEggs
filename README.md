@@ -8,7 +8,7 @@ An easy way to add nice looking eggs to your server!
 # Commands
 |Command|SubCommand|Description|Permission|Alias|
 |:---:|:---:|:---:|:---:|:---:|
-|eastereggs|-|Manage your easter eggs!|eastereggs.comamnd|egg|
+|eastereggs|-|Manage your easter eggs!|eastereggs.command|egg|
 | |spawn [color: string]|Spawn an egg|-|add|
 | |remove [all]|Remove an egg|-|delete|
 
