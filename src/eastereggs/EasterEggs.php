@@ -35,10 +35,10 @@ final class EasterEggs extends PluginBase{
 
 	public function onLoad() : void{
 		self::$instance = $this;
-		Entity::registerEntity(EasterEgg::class, true);
 	}
 
 	public function onEnable() : void{
+		Entity::registerEntity(EasterEgg::class, true);
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
 		$this->getServer()->getCommandMap()->register($this->getName(), new EasterCommand());
 	}

@@ -22,6 +22,9 @@ use const DIRECTORY_SEPARATOR as DS;
 
 final class EasterCommand extends Command implements PluginIdentifiableCommand{
 
+	/**
+	 * EasterCommand constructor.
+	 */
 	public function __construct(){
 		parent::__construct("eastereggs", "Manage your easter eggs!", "egg <spawn|remove> [color: string|all]", ["egg"]);
 		$this->setPermission("eastereggs.command");
@@ -31,20 +34,19 @@ final class EasterCommand extends Command implements PluginIdentifiableCommand{
 	 * @param CommandSender $sender
 	 * @param string $commandLabel
 	 * @param array $args
-	 * @return bool
 	 */
-	public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
+	public function execute(CommandSender $sender, string $commandLabel, array $args) : void{
 		if(!$sender instanceof Player){
 			$sender->sendMessage(EasterEggs::PREFIX . "Use this command in-game.");
-			return false;
+			return;
 		}
 		if(!$this->testPermissionSilent($sender)){
 			$sender->sendMessage(EasterEggs::PREFIX . "You don't have the permission to execute this command.");
-			return false;
+			return;
 		}
 		if(!isset($args[0])){
 			$sender->sendMessage(EasterEggs::PREFIX . "Usage: {$this->getUsage()}");
-			return false;
+			return;
 		}
 		switch(strtolower(array_shift($args))){
 			case "spawn":
@@ -99,7 +101,6 @@ final class EasterCommand extends Command implements PluginIdentifiableCommand{
 				$sender->sendMessage(EasterEggs::PREFIX . "Click an egg for removing it. To cancel, hit anything else.");
 				break;
 		}
-		return true;
 	}
 
 	/**
