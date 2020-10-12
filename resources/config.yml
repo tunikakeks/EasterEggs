@@ -1,0 +1,19 @@
+# if you want your players to find eggs, set this to true
+egg finding: true
+
+# how often the player can "find" the egg
+egg findings: 1
+
+# the action when a player finds an egg
+# only gets executed when egg finding is enabled
+# available actions are:
+#   award (sends the player a message)
+#   command (executes a command)
+# allowed placeholders are:
+#   {PLAYER} => player's name
+action:
+  - award:
+      message: "You've just found an egg!"
+  - command:
+      command: "/say {PLAYER} just found an egg!"
+      execute as player: true

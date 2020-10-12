@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
+
 namespace eastereggs;
 
 use eastereggs\entity\EasterEgg;
+use eastereggs\settings\SettingsManager;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
-use pocketmine\event\server\DataPacketSendEvent;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use function array_search;
 use function in_array;
-use function var_dump;
 
 final class EventListener implements Listener{
 
@@ -22,10 +22,9 @@ final class EventListener implements Listener{
 	 */
 	public function onPlayerQuit(PlayerQuitEvent $event) : void{
 		$player = $event->getPlayer();
-		if(!in_array($player, EasterEggs::$allowedEggAttackers)){
-			return;
-		}
-		unset(EasterEggs::$allowedEggAttackers[array_search($player, EasterEggs::$allowedEggAttackers)]);
+
+		if(in_array($player, EasterEggs::$allowedEggAttackers))
+			unset(EasterEggs::$allowedEggAttackers[array_search($player, EasterEggs::$allowedEggAttackers)]);
 	}
 
 	/**
@@ -35,11 +34,11 @@ final class EventListener implements Listener{
 	 */
 	public function onPlayerInteract(PlayerInteractEvent $event) : void{
 		$player = $event->getPlayer();
-		if(!in_array($player, EasterEggs::$allowedEggAttackers)){
-			return;
+
+		if(in_array($player, EasterEggs::$allowedEggAttackers)){
+			unset(EasterEggs::$allowedEggAttackers[array_search($player, EasterEggs::$allowedEggAttackers)]);
+			$player->sendMessage(EasterEggs::PREFIX."The egg removal was aborted.");
 		}
-		unset(EasterEggs::$allowedEggAttackers[array_search($player, EasterEggs::$allowedEggAttackers)]);
-		$player->sendMessage(EasterEggs::PREFIX . "The egg removal was aborted.");
 	}
 
 	/**
@@ -49,9 +48,7 @@ final class EventListener implements Listener{
 	 */
 	public function onDataPacketReceive(DataPacketReceiveEvent $event) : void{
 		$player = $event->getPlayer();
-		if(!in_array($player, EasterEggs::$allowedEggAttackers)){
-			return;
-		}
+		/** @var InventoryTransactionPacket $packet */
 		if(!($packet = $event->getPacket()) instanceof InventoryTransactionPacket){
 			return;
 		}
@@ -60,12 +57,24 @@ final class EventListener implements Listener{
 		}
 		$entity = $player->getLevel()->getEntity($packet->trData->entityRuntimeId);
 		if(!$entity instanceof EasterEgg){
-			$player->sendMessage(EasterEggs::PREFIX . "An error occurred while removing the entity.");
+			$player->sendMessage(EasterEggs::PREFIX."An error occurred while removing the entity.");
 			return;
 		}
-		unset(EasterEggs::$allowedEggAttackers[array_search($player, EasterEggs::$allowedEggAttackers)]);
-		$entity->close();
-		$player->sendMessage(EasterEggs::PREFIX . "The egg was successfully removed.");
+		if(in_array($player, EasterEggs::$allowedEggAttackers)){
+			unset(EasterEggs::$allowedEggAttackers[array_search($player, EasterEggs::$allowedEggAttackers)]);
+			$entity->flagForDespawn();
+			$player->sendMessage(EasterEggs::PREFIX."The egg was successfully removed.");
+		}elseif(SettingsManager::getInstance()->isEggFindingEnabled()){
+			if($entity->foundBy[$player->getName()] ?? 0 >= SettingsManager::getInstance()->getEggFindings()){
+				$player->sendMessage(EasterEggs::PREFIX."You've already found this egg.");
+			}else{
+				if(!isset($entity->foundBy[$player->getName()]))
+					$entity->foundBy[$player->getName()] = 0;
+				$entity->foundBy[$player->getName()]++;
+				foreach(SettingsManager::getInstance()->getActions() as $action)
+					$action->execute($player);
+			}
+		}
 		$event->setCancelled(true);
 	}
 
